@@ -8,6 +8,78 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 console.log(supabase); // Verifica se o cliente foi criado corretamente
 
+// Função para carregar os dias de jogo do Supabase
+async function carregarDiasDeJogo() {
+    // Consultar todos os dias de jogo da tabela 'game_days'
+    const { data, error } = await supabase
+        .from('game_days')  // Nome da tabela no Supabase
+        .select('*');  // Selecionar todos os campos
+
+    if (error) {
+        console.error('Erro ao carregar os dias de jogo:', error);
+        return;
+    }
+
+    // Preencher o select de "Dia de Jogo" e a lista de dias de jogo
+    const gameDayListSelect = document.getElementById('game-day-list');
+    const gameDaysList = document.getElementById('game-days-list');
+    const gameDaySelect = document.getElementById('game-day');
+
+    // Limpar as opções antes de adicionar as novas
+    gameDayListSelect.innerHTML = '';
+    gameDaysList.innerHTML = '';
+    gameDaySelect.innerHTML = '';
+
+    // Adicionar as opções para cada dia de jogo retornado do Supabase
+    data.forEach(gameDay => {
+        const formattedDate = formatDate(gameDay.date); // Formatar a data no formato DD-MM-YYYY
+
+        // Criar uma nova opção para o dia de jogo no select
+        const newOptionGameDay = document.createElement('option');
+        newOptionGameDay.value = gameDay.date;  // Usar a data como valor
+        newOptionGameDay.textContent = `${gameDay.name} - ${formattedDate}`;
+        gameDayListSelect.appendChild(newOptionGameDay);
+
+        // Criar um novo item de lista para o dia de jogo
+        const newDayItem = document.createElement('li');
+        newDayItem.textContent = `${gameDay.name} - ${formattedDate}`;
+        newDayItem.setAttribute('data-date', gameDay.date);  // Atribuir a data ao item
+        gameDaysList.appendChild(newDayItem);
+
+        // Criar uma nova opção para o select de dias de jogo
+        const newOption = document.createElement('option');
+        newOption.value = gameDay.date;
+        newOption.textContent = `${gameDay.name} - ${formattedDate}`;
+        gameDaySelect.appendChild(newOption);
+
+        // Criar a tabela dinâmica para o novo dia de jogo
+        const dynamicTables = document.getElementById('dynamic-tables');
+        const newTable = document.createElement('div');
+        newTable.innerHTML = `
+            <h2 id="title-${gameDay.date}">${gameDay.name} - ${formattedDate}</h2>
+            <table id="table-${gameDay.date}">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="total-${gameDay.date}" class="total">Total Pago: R$ 0,00</div>
+        `;
+        dynamicTables.appendChild(newTable);
+    });
+
+    // Se você deseja aplicar filtros ou outras ações após carregar os dados, pode chamá-las aqui
+    filtrarJogos(); // Aplica qualquer filtro existente
+}
+
+// Chamar a função para carregar os dias de jogo ao carregar a página
+window.onload = carregarDiasDeJogo;  // Ou use document.addEventListener('DOMContentLoaded', carregarDiasDeJogo);
+
 async function loadGameDaysAndGuests() {
     // Buscar os dias de jogo
     const { data: gameDays, error: gameDaysError } = await supabase
