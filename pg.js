@@ -8,7 +8,140 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 console.log(supabase); // Verifica se o cliente foi criado corretamente
 
-    let gameDays = {};// Objeto para armazenar os dias de jogo
+async function loadGameDaysAndGuests() {
+    // Buscar os dias de jogo
+    const { data: gameDays, error: gameDaysError } = await supabase
+        .from('game_days')  // Nome da tabela no Supabase
+        .select('*');
+
+    if (gameDaysError) {
+        console.error('Erro ao carregar dias de jogo:', gameDaysError);
+        return;
+    }
+
+    // Preencher o select de dias de jogo
+    const gameDaySelect = document.getElementById('game-day-list');
+    gameDays.forEach(game => {
+        const option = document.createElement('option');
+        option.value = game.id;  // Supondo que 'id' seja o identificador único
+        option.textContent = `${game.day_name} - ${game.date}`;
+        gameDaySelect.appendChild(option);
+    });
+
+    // Buscar os convidados
+    const { data: guests, error: guestsError } = await supabase
+        .from('guests')  // Nome da tabela de convidados no Supabase
+        .select('*');
+
+    if (guestsError) {
+        console.error('Erro ao carregar convidados:', guestsError);
+        return;
+    }
+
+    // Preencher as tabelas de pagamento
+    guests.forEach(guest => {
+        const tableBody = document.querySelector(`#table-${guest.game_day_id} tbody`);
+        if (tableBody) {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${guest.name}</td>
+                <td>R$ ${guest.amount_paid.toFixed(2).replace('.', ',')}</td>
+                <td>${guest.status}</td>
+                <td>
+                    <button onclick="editarStatus('${guest.id}', '${guest.status}')">Editar Status</button>
+                    <button onclick="excluirConvidado(${guest.id})">
+                        <i class="fas fa-trash-alt"></i> Excluir
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+        }
+    });
+}
+
+// Adicionar um novo convidado
+document.getElementById('add-guest-form').addEventListener('submit', async function(e) {
+    e.preventDefault(); // Evitar o comportamento padrão do formulário
+
+    const guestName = document.getElementById('guest-name').value.trim();
+    const amountPaid = document.getElementById('amount-paid').value.trim();
+    const status = document.getElementById('status-select').value;
+    const gameDayId = document.getElementById('game-day').value;
+
+    // Validar os dados
+    if (!guestName || !amountPaid || !status || !gameDayId) {
+        showFeedback('Por favor, preencha todos os campos.', 'error');
+        return;
+    }
+
+    // Adicionar o convidado no Supabase
+    const { data, error } = await supabase
+        .from('guests')
+        .insert([
+            {
+                name: guestName,
+                amount_paid: parseFloat(amountPaid.replace(',', '.')),
+                status: status,
+                game_day_id: gameDayId
+            }
+        ]);
+
+    if (error) {
+        showFeedback('Erro ao adicionar convidado.', 'error');
+        console.error('Erro ao adicionar convidado:', error);
+        return;
+    }
+
+    // Atualizar a UI
+    const tableBody = document.querySelector(`#table-${gameDayId} tbody`);
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td>${guestName}</td>
+        <td>R$ ${parseFloat(amountPaid.replace(',', '.')).toFixed(2).replace('.', ',')}</td>
+        <td>${status}</td>
+        <td>
+            <button onclick="editarStatus('${guestName}', '${status}', '${gameDayId}')">Editar Status</button>
+            <button onclick="excluirConvidado('${guestName}', '${gameDayId}')">
+                <i class="fas fa-trash-alt"></i> Excluir
+            </button>
+        </td>
+    `;
+    tableBody.appendChild(newRow);
+
+    // Atualizar o total de valores pagos
+    atualizarTotal(gameDayId);
+
+    showFeedback('Convidado adicionado com sucesso!', 'success');
+    document.getElementById('add-guest-form').reset();
+});
+
+async function excluirConvidado(guestId, gameDayId) {
+    // Confirmar exclusão
+    const { error } = await supabase
+        .from('guests')
+        .delete()
+        .match({ id: guestId });
+
+    if (error) {
+        console.error('Erro ao excluir convidado:', error);
+        return;
+    }
+
+    // Atualizar a UI
+    const tableBody = document.querySelector(`#table-${gameDayId} tbody`);
+    const rowToRemove = document.querySelector(`#table-${gameDayId} tbody tr[data-id="${guestId}"]`);
+    if (rowToRemove) {
+        rowToRemove.remove();
+    }
+
+    // Atualizar o total de valores pagos
+    atualizarTotal(gameDayId);
+
+    showFeedback('Convidado excluído com sucesso!', 'success');
+}
+
+   /*
+   let gameDays = {};// Objeto para armazenar os dias de jogo
 
     // Função para formatar a data no formato DD-MM-YYYY
     function formatDate(date) {
