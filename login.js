@@ -18,6 +18,9 @@ async function validarLogin() {
         .eq('email', usuario)
         .single(); // Espera um único usuário com esse email
 
+    console.log(data);  // Verifique os dados retornados
+    console.log(error); // Verifique o erro, se houver
+    
     if (error) {
         errorMessage.textContent = 'Usuário ou senha incorretos!';
         return;
