@@ -468,7 +468,7 @@ async function excluirConvidado(guestId, gameDayId) {
     }
     
     let deleteGuestName, deleteGameDay; // Variáveis para armazenar nome e dia do jogo do convidado que será excluído
-
+/*
     // Função para excluir o convidado
     function excluirConvidado(guestName, gameDay) {
         // Armazenar as informações para usar após a confirmação
@@ -512,3 +512,4 @@ async function excluirConvidado(guestId, gameDayId) {
         // Fechar o modal sem excluir nada
         document.getElementById('confirmation-modal').style.display = 'none';
     });
+*/
