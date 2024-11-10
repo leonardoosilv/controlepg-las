@@ -13,6 +13,8 @@ async function validarLogin() {
     const senha = document.getElementById('senha').value;
     const errorMessage = document.getElementById('errorMessage');
 
+    console.log(`Tentando login com usuário: ${usuario} e senha: ${senha}`);
+    
     try {
         // Consulta ao banco de dados Supabase
         const { data, error } = await supabase
@@ -30,6 +32,8 @@ async function validarLogin() {
             return;
         }
 
+        console.log('Usuário encontrado:', data);
+        
         if (data.senha === senha) {
             console.log('Login bem-sucedido!');
             window.location.href = "pg.html";  // Redireciona para a página de pagamento
