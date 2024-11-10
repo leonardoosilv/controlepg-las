@@ -31,7 +31,7 @@ async function validarLogin() {
         console.log('Usuário encontrado:', data);
         if (data.senha === senha) {
             console.log('Senha correta, redirecionando...');
-            window.location.href = "pg.html"; // Redireciona para a página
+            window.location.href = "./pg.html"; // Redireciona para a página
         } else {
             console.log('Senha incorreta');
             errorMessage.textContent = 'Usuário ou senha incorretos!';
