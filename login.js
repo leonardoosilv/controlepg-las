@@ -3,7 +3,7 @@ const supabaseUrl = 'https://<SUPABASE_URL>'; // Substitua pelo URL do seu Supab
 const supabaseKey = 'public-anon-key'; // Substitua pela chave pública do Supabase
 
 // Criação correta do cliente Supabase
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 console.log(supabase); // Verifica se o cliente foi criado corretamente
 
