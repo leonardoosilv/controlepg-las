@@ -211,7 +211,7 @@ async function excluirConvidado(guestId, gameDayId) {
     document.getElementById('game-day-list').addEventListener('change', filtrarJogos);
 
     // Evento que adiciona um novo dia de jogo
-    document.getElementById('add-game-day-form').addEventListener('submit', function(e) {
+    document.getElementById('add-game-day-form').addEventListener('submit', async function(e) {
         e.preventDefault();// Evitar o comportamento padrão do formulário
 
         const dayName = document.getElementById('game-day-name').value;// Nome do dia da semana
