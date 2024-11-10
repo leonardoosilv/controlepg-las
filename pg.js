@@ -20,6 +20,9 @@ async function carregarDiasDeJogo() {
         return;
     }
 
+    // Verificar a estrutura dos dados retornados
+    console.log('Estrutura completa dos dados retornados do Supabase:', data);
+    
     // Preencher o select de "Dia de Jogo" e a lista de dias de jogo
     const gameDayListSelect = document.getElementById('game-day-list');
     const gameDaysList = document.getElementById('game-days-list');
