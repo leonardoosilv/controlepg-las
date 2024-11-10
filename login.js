@@ -1,6 +1,6 @@
 // URL e chave pública do Supabase
-const supabaseUrl = 'https://<SUPABASE_URL>'; // Substitua pelo URL do seu Supabase
-const supabaseKey = 'public-anon-key'; // Substitua pela chave pública do Supabase
+const supabaseUrl = 'https://iltlyenxlkegbwoalihn.supabase.co'; // Substitua pelo URL do seu Supabase
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsdGx5ZW54bGtlZ2J3b2FsaWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEyMDg2MzUsImV4cCI6MjA0Njc4NDYzNX0.kku-h687kIvvfAWycDE1OxT6TValyBSJbxxGpeXk4l4'; // Substitua pela chave pública do Supabase
 
 // Criação correta do cliente Supabase
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
