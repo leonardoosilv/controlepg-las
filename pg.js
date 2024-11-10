@@ -43,26 +43,26 @@ async function carregarDiasDeJogo() {
         // Criar uma nova opção para o dia de jogo no select
         const newOptionGameDay = document.createElement('option');
         newOptionGameDay.value = gameDay.date;  // Usar a data como valor
-        newOptionGameDay.textContent = `${gameDay.name} - ${formattedDate}`;
+        newOptionGameDay.textContent = `${dayName} - ${formattedDate}`;
         gameDayListSelect.appendChild(newOptionGameDay);
 
         // Criar um novo item de lista para o dia de jogo
         const newDayItem = document.createElement('li');
-        newDayItem.textContent = `${gameDay.name} - ${formattedDate}`;
+        newDayItem.textContent = `${dayName} - ${formattedDate}`;
         newDayItem.setAttribute('data-date', gameDay.date);  // Atribuir a data ao item
         gameDaysList.appendChild(newDayItem);
 
         // Criar uma nova opção para o select de dias de jogo
         const newOption = document.createElement('option');
         newOption.value = gameDay.date;
-        newOption.textContent = `${gameDay.name} - ${formattedDate}`;
+        newOption.textContent = `${dayName} - ${formattedDate}`;
         gameDaySelect.appendChild(newOption);
 
         // Criar a tabela dinâmica para o novo dia de jogo
         const dynamicTables = document.getElementById('dynamic-tables');
         const newTable = document.createElement('div');
         newTable.innerHTML = `
-            <h2 id="title-${gameDay.date}">${gameDay.name} - ${formattedDate}</h2>
+            <h2 id="title-${gameDay.date}">${dayName} - ${formattedDate}</h2>
             <table id="table-${gameDay.date}">
                 <thead>
                     <tr>
