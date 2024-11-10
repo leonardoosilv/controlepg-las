@@ -140,7 +140,6 @@ async function excluirConvidado(guestId, gameDayId) {
     showFeedback('Convidado excluído com sucesso!', 'success');
 }
 
-   /*
    let gameDays = {};// Objeto para armazenar os dias de jogo
 
     // Função para formatar a data no formato DD-MM-YYYY
@@ -513,4 +512,3 @@ async function excluirConvidado(guestId, gameDayId) {
         // Fechar o modal sem excluir nada
         document.getElementById('confirmation-modal').style.display = 'none';
     });
-*/
