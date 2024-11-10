@@ -32,6 +32,9 @@ async function carregarDiasDeJogo() {
 
     // Adicionar as opções para cada dia de jogo retornado do Supabase
     data.forEach(gameDay => {
+        // Verifique o que está sendo retornado
+        console.log(`Dia de Jogo: ${gameDay.name}, Data: ${gameDay.date}`);
+        
         const formattedDate = formatDate(gameDay.date); // Formatar a data no formato DD-MM-YYYY
 
         // Criar uma nova opção para o dia de jogo no select
