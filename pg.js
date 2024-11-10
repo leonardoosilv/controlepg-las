@@ -260,6 +260,25 @@ async function excluirConvidado(guestId, gameDayId) {
         `;
         dynamicTables.appendChild(newTable);
 
+        // Enviar dados para o banco de dados no Supabase
+    const { data, error } = await supabase
+        .from('game_days')  // Nome da tabela no Supabase
+        .insert([
+            { 
+                day_name: dayName,  // Nome do dia de jogo
+                date: dayDate,  // Data do dia de jogo
+            }
+        ]);
+
+    // Verificar se houve algum erro ao inserir no banco de dados
+    if (error) {
+        console.error('Erro ao adicionar dia de jogo no Supabase:', error);
+        showFeedback('Erro ao adicionar dia de jogo!', 'error');
+    } else {
+        // Mostrar mensagem de sucesso
+        showFeedback('Dia de jogo adicionado com sucesso!', 'success');
+    }
+        
         // Filtrar jogos novamente após adicionar um novo
         filtrarJogos();
         document.getElementById('add-game-day-form').reset();// Resetar o formulário de adicionar dia
