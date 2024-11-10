@@ -22,15 +22,22 @@ async function validarLogin() {
     console.log(error); // Verifique o erro, se houver
     
     if (error) {
+        console.log('Erro na consulta ao banco de dados:', error); // Exibe erro de consulta
         errorMessage.textContent = 'Usuário ou senha incorretos!';
         return;
     }
 
-    // Verificar a senha
-    if (data && data.senha === senha) {
-        // Login bem-sucedido, redireciona para a página de jogos
-        window.location.href = "pg.html"; // Altere para a página desejada
+    if (data) {
+        console.log('Usuário encontrado:', data);
+        if (data.senha === senha) {
+            console.log('Senha correta, redirecionando...');
+            window.location.href = "pg.html"; // Redireciona para a página
+        } else {
+            console.log('Senha incorreta');
+            errorMessage.textContent = 'Usuário ou senha incorretos!';
+        }
     } else {
+        console.log('Usuário não encontrado');
         errorMessage.textContent = 'Usuário ou senha incorretos!';
     }
 }
