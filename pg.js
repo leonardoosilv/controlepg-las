@@ -513,3 +513,4 @@ async function excluirConvidado(guestId, gameDayId) {
         // Fechar o modal sem excluir nada
         document.getElementById('confirmation-modal').style.display = 'none';
     });
+*/
