@@ -37,7 +37,7 @@ async function carregarDiasDeJogo() {
     data.forEach(gameDay => {
         // Verifique o que está sendo retornado
         console.log(`Dia de Jogo: ${gameDay.name}, Data: ${gameDay.date}`);
-        
+        const dayName = gameDay.day_name || 'Nome não disponível';  // Agora usando 'day_name'
         const formattedDate = formatDate(gameDay.date); // Formatar a data no formato DD-MM-YYYY
 
         // Criar uma nova opção para o dia de jogo no select
