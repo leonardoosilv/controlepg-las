@@ -33,6 +33,17 @@ async function carregarDiasDeJogo() {
     gameDaysList.innerHTML = '';
     gameDaySelect.innerHTML = '';
 
+    // Adicionar a opção padrão novamente antes de adicionar as novas opções
+    const defaultOptionGameDayList = document.createElement('option');
+    defaultOptionGameDayList.value = '';
+    defaultOptionGameDayList.textContent = 'Jogo do dia';
+    gameDayListSelect.appendChild(defaultOptionGameDayList);
+
+    const defaultOptionGameDay = document.createElement('option');
+    defaultOptionGameDay.value = '';
+    defaultOptionGameDay.textContent = 'Selecione o Dia do Jogo';
+    gameDaySelect.appendChild(defaultOptionGameDay);
+
     // Adicionar as opções para cada dia de jogo retornado do Supabase
     data.forEach(gameDay => {
         // Verifique o que está sendo retornado
