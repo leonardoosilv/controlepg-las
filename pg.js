@@ -66,42 +66,55 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
     const guestName = document.getElementById('guest-name').value.trim();
     const amountPaid = document.getElementById('amount-paid').value.trim();
     const status = document.getElementById('status-select').value;
-    const gameDayId = document.getElementById('game-day').value;
+    const gameDay = document.getElementById('game-day').value;
 
     // Validar os dados
-    if (!guestName || !amountPaid || !status || !gameDayId) {
+    if (!guestName || !amountPaid || !status || !gameDay) {
         showFeedback('Por favor, preencha todos os campos.', 'error');
         return;
     }
 
-    // Adicionar o convidado no Supabase
+    // Verificar se o nome do convidado já existe para o dia de jogo
+    if (nomeConvidadoExiste(guestName, gameDay)) {
+        showFeedback('Já existe um convidado com esse nome para o dia do jogo selecionado.', 'error');
+        return;
+    }
+
+    // Verificar se o valor pago é um número válido e maior que zero
+    const amountPaidNumber = parseFloat(amountPaid.replace(',', '.')); // Convertendo vírgula para ponto
+    if (isNaN(amountPaidNumber) || amountPaidNumber <= 0) {
+        showFeedback('Por favor, insira um valor válido para o pagamento (maior que zero).', 'error');
+        return;
+    }
+
+    // Inserir no Supabase (Banco de Dados)
     const { data, error } = await supabase
         .from('guests')
         .insert([
             {
                 name: guestName,
-                amount_paid: parseFloat(amountPaid.replace(',', '.')),
+                amount_paid: amountPaidNumber,
                 status: status,
-                game_day_id: gameDayId
+                game_day_id: gameDay // Referência ao ID do dia de jogo
             }
         ]);
 
     if (error) {
-        showFeedback('Erro ao adicionar convidado.', 'error');
+        showFeedback('Erro ao adicionar convidado no banco de dados.', 'error');
         console.error('Erro ao adicionar convidado:', error);
         return;
     }
 
-    // Atualizar a UI
-    const tableBody = document.querySelector(`#table-${gameDayId} tbody`);
+    // Se a inserção for bem-sucedida, atualizar a UI
+    const tableBody = document.querySelector(`#table-${gameDay} tbody`);
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
         <td>${guestName}</td>
-        <td>R$ ${parseFloat(amountPaid.replace(',', '.')).toFixed(2).replace('.', ',')}</td>
-        <td>${status}</td>
+        <td>R$ ${amountPaidNumber.toFixed(2).replace('.', ',')}</td>
+        <td id="status-${guestName}-${gameDay}">${status}</td>
         <td>
-            <button onclick="editarStatus('${guestName}', '${status}', '${gameDayId}')">Editar Status</button>
-            <button onclick="excluirConvidado('${guestName}', '${gameDayId}')">
+            <button onclick="editarStatus('${guestName}-${gameDay}', '${status}', '${gameDay}')">Editar Status</button>
+            <button onclick="excluirConvidado('${guestName}', '${gameDay}')">
                 <i class="fas fa-trash-alt"></i> Excluir
             </button>
         </td>
@@ -109,10 +122,14 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
     tableBody.appendChild(newRow);
 
     // Atualizar o total de valores pagos
-    atualizarTotal(gameDayId);
+    atualizarTotal(gameDay);
 
+    // Exibir feedback de sucesso e limpar o formulário
     showFeedback('Convidado adicionado com sucesso!', 'success');
-    document.getElementById('add-guest-form').reset();
+    document.getElementById('add-guest-form').reset(); // Resetar o formulário
+
+    // Atualizar a tabela considerando o filtro de status ativo
+    filtrarPagamentosPorStatus();
 });
 
 async function excluirConvidado(guestId, gameDayId) {
