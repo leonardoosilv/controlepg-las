@@ -3,6 +3,8 @@ const supabaseUrl = 'https://iltlyenxlkegbwoalihn.supabase.co';  // Substitua pe
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsdGx5ZW54bGtlZ2J3b2FsaWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEyMDg2MzUsImV4cCI6MjA0Njc4NDYzNX0.kku-h687kIvvfAWycDE1OxT6TValyBSJbxxGpeXk4l4';  // Substitua pela chave pública do Supabase
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+console.log(supabase); // Verifica se o cliente foi criado corretamente
+
 // Função para validar login com o Supabase
 async function validarLogin() {
     const usuario = document.getElementById('usuario').value;
