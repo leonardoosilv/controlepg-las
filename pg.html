@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Pagamento - Vôlei</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="./pg.css"></head>
+
+</head>
+<body>
+
+<h1>Controle de Pagamento de Convidados - Vôlei</h1>
+
+<!-- Feedback Message -->
+<div id="feedback-message" class="feedback-message feedback-success" style="display: none;">Convidado adicionado com sucesso!</div>
+
+<!-- Formulário para adicionar um novo dia de jogo -->
+<h2>Adicionar Novo Dia de Jogo</h2>
+<form id="add-game-day-form">
+    <!-- <label for="game-day-name">Selecione o Dia da Semana:</label> -->
+    <select id="game-day-name" required="">
+        <option value="">Dia da Semana:</option>
+        <option value="Segunda-feira">Segunda-feira</option>
+        <option value="Terça-feira">Terça-feira</option>
+        <option value="Quarta-feira">Quarta-feira</option>
+        <option value="Quinta-feira">Quinta-feira</option>
+        <option value="Sexta-feira">Sexta-feira</option>
+        <option value="Sábado">Sábado</option>
+        <option value="Domingo">Domingo</option>
+    </select>
+    <input type="date" id="game-day-date" required="">
+    <input type="submit" value="Adicionar Dia">
+</form>
+
+<!-- Formulário para adicionar um novo convidado -->
+<h2>Adicionar Novo Convidado</h2>
+<form id="add-guest-form">
+    <input type="text" id="guest-name" placeholder="Nome do Convidado" required="">
+    <input type="number" id="amount-paid" placeholder="Valor" required="">
+    <select id="status-select" required="">
+        <option value="">Selecione o Status</option>
+        <option value="Pago">Pago</option>
+        <option value="Não Pago">Não Pago</option>
+    </select>
+    <select id="game-day" required="">
+        <option value="">Selecione o Dia do Jogo</option>
+    <input type="submit" value="Adicionar Convidado">
+</form>
+
+<!-- Lista de dias de jogos -->
+<div id="game-days" style="display:none;">
+    <h2>Dias de Jogos</h2>
+    <ul id="game-days-list"></ul>
+</div>
+
+<!-- Modal de Confirmação -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <h3>Confirmação de Exclusão</h3>
+        <p>Você tem certeza que deseja excluir este convidado?</p>
+        <div class="modal-actions">
+            <button id="confirm-delete" class="modal-button">Sim, excluir</button>
+            <button id="cancel-delete" class="modal-button">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Formulário para filtro por mês e ano -->
+<h2>Filtros</h2>
+<form id="filter-form">
+
+    <select id="filter-status" onchange="filtrarPagamentosPorStatus()">
+        <option value="todos">Todos os Status</option>
+        <option value="Pago">Pago</option>
+        <option value="Não Pago">Não Pago</option>
+    </select>
+
+    <!-- Seletor de Dia de Jogo -->
+    <select id="game-day-list" name="game-day-list">
+        <option value="">Jogo do dia</option>
+        <!-- As opções serão dinamicamente adicionadas pelo JavaScript -->
+    </select>
+
+    <select id="filter-month">
+        <option value="">Mês</option>
+        <option value="01">Janeiro</option>
+        <option value="02">Fevereiro</option>
+        <option value="03">Março</option>
+        <option value="04">Abril</option>
+        <option value="05">Maio</option>
+        <option value="06">Junho</option>
+        <option value="07">Julho</option>
+        <option value="08">Agosto</option>
+        <option value="09">Setembro</option>
+        <option value="10">Outubro</option>
+        <option value="11">Novembro</option>
+        <option value="12">Dezembro</option>
+    </select>
+
+    <!-- Seletor de ano -->
+    <select id="filter-year">
+        <option value="">Ano</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+    </select>
+</form>
+
+<!-- Tabelas Dinâmicas para Dias de Jogo -->
+<div id="dynamic-tables"></div>
+
+<script src="./pg.js"></script>
+</body>
+</html>
