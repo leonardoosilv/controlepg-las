@@ -151,6 +151,9 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
     const status = document.getElementById('status-select').value; // Status de pagamento
     const gameDay = document.getElementById('game-day').value; // Dia do jogo selecionado
 
+    // Log para ver o valor de gameDay
+    console.log("Valor de gameDay:", gameDay);
+    
     // Verificar se todos os campos estão preenchidos corretamente
     if (!guestName || !amountPaid || !status || !gameDay) {
         showFeedback('Por favor, preencha todos os campos.', 'error');
