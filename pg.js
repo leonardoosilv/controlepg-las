@@ -148,16 +148,16 @@ async function loadGameDaysAndGuests() {
     });
 }
 
-// Adicionar um novo convidado
+// Evento para adicionar um novo convidado
 document.getElementById('add-guest-form').addEventListener('submit', async function(e) {
     e.preventDefault(); // Evitar o comportamento padrão do formulário
 
-    const guestName = document.getElementById('guest-name').value.trim();
-    const amountPaid = document.getElementById('amount-paid').value.trim();
-    const status = document.getElementById('status-select').value;
-    const gameDay = document.getElementById('game-day').value;
+    const guestName = document.getElementById('guest-name').value.trim(); // Nome do convidado
+    const amountPaid = document.getElementById('amount-paid').value.trim(); // Valor pago
+    const status = document.getElementById('status-select').value; // Status de pagamento
+    const gameDay = document.getElementById('game-day').value; // Dia do jogo selecionado
 
-    // Validar os dados
+    // Verificar se todos os campos estão preenchidos corretamente
     if (!guestName || !amountPaid || !status || !gameDay) {
         showFeedback('Por favor, preencha todos os campos.', 'error');
         return;
@@ -176,49 +176,72 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         return;
     }
 
-    // Inserir no Supabase (Banco de Dados)
+    // Buscar o game_day_id com base no nome ou valor de gameDay
+    const { data: gameDayData, error: gameDayError } = await supabase
+        .from('game_days')
+        .select('id')
+        .eq('name', gameDay) // Supondo que você tenha um campo 'name' em 'game_days'
+        .single(); // Pega um único resultado
+
+    if (gameDayError) {
+        showFeedback('Erro ao buscar o dia de jogo no banco de dados.', 'error');
+        console.error(gameDayError);
+        return;
+    }
+
+    // Se o dia do jogo não for encontrado
+    if (!gameDayData) {
+        showFeedback('Dia de jogo não encontrado.', 'error');
+        return;
+    }
+
+    const gameDayId = gameDayData.id; // ID do dia de jogo
+
+    // Inserir os dados do convidado no Supabase
     const { data, error } = await supabase
-        .from('guests')
+        .from('guests')  // Tabela 'guests'
         .insert([
             {
                 name: guestName,
                 amount_paid: amountPaidNumber,
                 status: status,
-                game_day_id: gameDay // Referência ao ID do dia de jogo
+                game_day_id: gameDayId  // Associando o convidado ao dia de jogo via game_day_id
             }
         ]);
 
     if (error) {
-        showFeedback('Erro ao adicionar convidado no banco de dados.', 'error');
-        console.error('Erro ao adicionar convidado:', error);
-        return;
+        showFeedback('Erro ao adicionar convidado ao banco de dados.', 'error');
+        console.error(error);
+    } else {
+        // Se a inserção for bem-sucedida, atualize a tabela no HTML
+        const tableBody = document.querySelector(`#table-${gameDayId} tbody`);
+        if (!tableBody) return;
+
+        // Criar uma nova linha na tabela com os dados do convidado
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${guestName}</td>
+            <td>R$ ${amountPaidNumber.toFixed(2).replace('.', ',')}</td>
+            <td id="status-${guestName}-${gameDayId}">${status}</td>
+            <td>
+                <button onclick="editarStatus('${guestName}-${gameDayId}', '${status}', '${gameDayId}')">Editar Status</button>
+                <button onclick="excluirConvidado('${guestName}', '${gameDayId}')">
+                    <i class="fas fa-trash-alt"></i> Excluir
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+
+        // Atualizar o total de valores pagos
+        atualizarTotal(gameDayId);
+
+        // Exibir mensagem de sucesso e limpar o formulário
+        showFeedback('Convidado adicionado com sucesso!', 'success');
+        document.getElementById('add-guest-form').reset(); // Resetar o formulário
+
+        // Atualizar a tabela considerando o filtro de status ativo
+        filtrarPagamentosPorStatus();
     }
-
-    // Se a inserção for bem-sucedida, atualizar a UI
-    const tableBody = document.querySelector(`#table-${gameDay} tbody`);
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td>${guestName}</td>
-        <td>R$ ${amountPaidNumber.toFixed(2).replace('.', ',')}</td>
-        <td id="status-${guestName}-${gameDay}">${status}</td>
-        <td>
-            <button onclick="editarStatus('${guestName}-${gameDay}', '${status}', '${gameDay}')">Editar Status</button>
-            <button onclick="excluirConvidado('${guestName}', '${gameDay}')">
-                <i class="fas fa-trash-alt"></i> Excluir
-            </button>
-        </td>
-    `;
-    tableBody.appendChild(newRow);
-
-    // Atualizar o total de valores pagos
-    atualizarTotal(gameDay);
-
-    // Exibir feedback de sucesso e limpar o formulário
-    showFeedback('Convidado adicionado com sucesso!', 'success');
-    document.getElementById('add-guest-form').reset(); // Resetar o formulário
-
-    // Atualizar a tabela considerando o filtro de status ativo
-    filtrarPagamentosPorStatus();
 });
 
 async function excluirConvidado(guestId, gameDayId) {
@@ -408,7 +431,7 @@ async function excluirConvidado(guestId, gameDayId) {
             totalElement.textContent = `Total Pago: R$ ${totalPago.toFixed(2).replace('.', ',')}`;
         });
     }
-
+/*
     // Evento para adicionar um novo convidado
     document.getElementById('add-guest-form').addEventListener('submit', function(e) {
         e.preventDefault(); // Evitar o comportamento padrão do formulário
@@ -466,7 +489,7 @@ async function excluirConvidado(guestId, gameDayId) {
         // Atualizar a tabela considerando o filtro de status ativo
         filtrarPagamentosPorStatus();
     });
-
+*/
     // Função para verificar se o nome do convidado já existe para o dia do jogo
     function nomeConvidadoExiste(guestName, gameDay) {
         const tableBody = document.querySelector(`#table-${gameDay} tbody`);
