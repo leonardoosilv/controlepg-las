@@ -306,7 +306,7 @@ async function excluirConvidado(guestId, gameDayId) {
         const dayName = document.getElementById('game-day-name').value;// Nome do dia da semana
         const dayDate = document.getElementById('game-day-date').value;// Data do dia do jogo
         const dayId = dayDate; // Usando a data como ID
-        const formattedDate = formatDate(dayDate);// Formatação da data
+        const formattedDate = formatDate(dayDate);// Formatação da data  
 
         // Criar uma nova opção para o dia de jogo no select
         const gameDayListSelect = document.getElementById('game-day-list'); // Lista de Dia de Jogo
@@ -371,6 +371,9 @@ async function excluirConvidado(guestId, gameDayId) {
         // Filtrar jogos novamente após adicionar um novo
         filtrarJogos();
         document.getElementById('add-game-day-form').reset();// Resetar o formulário de adicionar dia
+        
+        // Limpar o formulário
+        clearForm('add-game-day-form');
     });
 
     // Função para filtrar os pagamentos por status em todas as tabelas visíveis
@@ -462,29 +465,6 @@ async function excluirConvidado(guestId, gameDayId) {
 
         // Atualizar a tabela considerando o filtro de status ativo
         filtrarPagamentosPorStatus();
-    });
-
-    document.getElementById('add-game-day-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        // Simular a adição de um novo dia de jogo (aqui seria o código para adicionar o dia de jogo)
-        // Pegando os valores dos campos do formulário
-        const gameName = document.getElementById('game-day-name').value.trim(); // Remove espaços extras
-        const gameDate = document.getElementById('game-day-date').value.trim(); // Remove espaços extras
-
-        // Verificar se os campos estão preenchidos corretamente
-        // Se tudo estiver correto, exibe a mensagem de sucesso
-        if (!gameName || !gameDate) {
-            showFeedback('Dia de jogo adicionado com sucesso!', 'success');
-            return;
-        }else{
-
-        // Se tudo não estiver correto, exibe a mensagem de erro
-        showFeedback('Por favor, preencha todos os campos corretamente.', 'error');
-        }
-
-        // Limpar o formulário
-        clearForm('add-game-day-form');
     });
 
     // Função para verificar se o nome do convidado já existe para o dia do jogo
