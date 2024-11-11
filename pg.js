@@ -6,8 +6,6 @@ const supabaseUrl = 'https://iltlyenxlkegbwoalihn.supabase.co'
 // Criação correta do cliente Supabase
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-console.log(supabase); // Verifica se o cliente foi criado corretamente
-
 // Função para carregar os dias de jogo do Supabase
 async function carregarDiasDeJogo() {
     // Consultar todos os dias de jogo da tabela 'game_days'
@@ -19,9 +17,6 @@ async function carregarDiasDeJogo() {
         console.error('Erro ao carregar os dias de jogo:', error);
         return;
     }
-
-    // Verificar a estrutura dos dados retornados
-    console.log('Estrutura completa dos dados retornados do Supabase:', data);
     
     // Preencher o select de "Dia de Jogo" e a lista de dias de jogo
     const gameDayListSelect = document.getElementById('game-day-list');
@@ -179,6 +174,8 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
     const { data: gameDayData, error: gameDayError } = await supabase
         .from('game_days')
         .select('id')
+        // Verificar a estrutura dos dados retornados
+    console.log('Estrutura completa dos dados retornados do Supabase:', data);
         .eq('name', gameDay) // Supondo que você tenha um campo 'name' em 'game_days'
         .single(); // Pega um único resultado
 
