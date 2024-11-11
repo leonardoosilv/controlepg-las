@@ -103,6 +103,9 @@ async function loadGameDaysAndGuests() {
         .from('game_days')  // Nome da tabela no Supabase
         .select('*');
 
+    // Verificar a estrutura dos dados retornados
+    console.log('Estrutura completa dos dados retornados do Supabase:', data);
+    
     if (gameDaysError) {
         console.error('Erro ao carregar dias de jogo:', gameDaysError);
         return;
