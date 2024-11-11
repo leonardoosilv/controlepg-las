@@ -174,7 +174,7 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
     const { data: gameDayData, error: gameDayError } = await supabase
         .from('game_days')
         .select('id')
-        .eq('name', gameDay) // Supondo que você tenha um campo 'name' em 'game_days'
+        .eq('CONCAT(day_name, \' \', TO_CHAR(date, \'DD/MM/YYYY\'))'', gameDay) // Supondo que você tenha um campo 'name' em 'game_days'
         .single(); // Pega um único resultado
     
     if (gameDayError) {
