@@ -172,16 +172,12 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         showFeedback('Por favor, insira um valor válido para o pagamento (maior que zero).', 'error');
         return;
     }
-
-    // Convertendo a data de gameDay para o formato yyyy-mm-dd
-    const [day, month, year] = gameDay.split('/');
-    const formattedGameDay = `${year}-${month}-${day}`;  // Formato correto: yyyy-mm-dd
-    
+   
     // Buscar o game_day_id com base no nome ou valor de gameDay
     const { data: gameDayData, error: gameDayError } = await supabase
         .from('game_days')
         .select('id')
-        .eq('date', formattedGameDay) // Usando a data no formato correto
+        .eq('date', gameDay) // Usando a data no formato correto
         .single(); // Pega um único resultado
     
     if (gameDayError) {
