@@ -142,6 +142,68 @@ async function loadGameDaysAndGuests() {
     });
 }
 
+// Função para carregar os convidados para um dia de jogo específico
+async function carregarConvidados(gameDay) {
+    // Formatar a data para o id da tabela (ex: 'DD-MM-YYYY')
+    const formattedGameDay = formatDateForTable(gameDay);
+
+    // Limpar a tabela antes de adicionar os novos dados
+    const tableBody = document.querySelector(`#table-${formattedGameDay} tbody`);
+    if (!tableBody) {
+        showFeedback('Tabela de convidados não encontrada para este dia de jogo.', 'error');
+        return;
+    }
+    tableBody.innerHTML = ''; // Limpar a tabela para evitar duplicação
+
+    // Buscar os convidados do banco de dados para o game_day selecionado
+    const { data: guestsData, error } = await supabase
+        .from('guests')
+        .select('name, amount_paid, status')
+        .eq('game_day_id', formattedGameDay); // Usando o game_day_id como filtro
+    
+    if (error) {
+        showFeedback('Erro ao carregar os convidados.', 'error');
+        console.error(error);
+        return;
+    }
+
+    // Se não houver convidados para esse dia de jogo
+    if (!guestsData || guestsData.length === 0) {
+        showFeedback('Nenhum convidado encontrado para este dia de jogo.', 'info');
+        return;
+    }
+
+    // Adicionar os convidados à tabela
+    guestsData.forEach(guest => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${guest.name}</td>
+            <td>R$ ${guest.amount_paid.toFixed(2).replace('.', ',')}</td>
+            <td id="status-${guest.name}-${formattedGameDay}">${guest.status}</td>
+            <td>
+                <button onclick="editarStatus('${guest.name}-${formattedGameDay}', '${guest.status}', '${formattedGameDay}')">Editar Status</button>
+                <button onclick="excluirConvidado('${guest.name}', '${formattedGameDay}')">
+                    <i class="fas fa-trash-alt"></i> Excluir
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+    });
+
+    // Atualizar o total de valores pagos para esse dia de jogo
+    atualizarTotal(formattedGameDay);
+}
+
+// Chame a função para carregar os convidados assim que a página for carregada
+document.addEventListener('DOMContentLoaded', async () => {
+    const gameDay = document.getElementById('game-day').value; // Obtenha o dia do jogo selecionado
+    if (gameDay) {
+        await carregarConvidados(gameDay);
+    } else {
+        showFeedback('Por favor, selecione um dia de jogo.', 'error');
+    }
+});
+
 // Evento para adicionar um novo convidado
 document.getElementById('add-guest-form').addEventListener('submit', async function(e) {
     e.preventDefault(); // Evitar o comportamento padrão do formulário
