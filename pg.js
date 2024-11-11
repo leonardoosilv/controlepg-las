@@ -47,7 +47,6 @@ async function carregarDiasDeJogo() {
     // Adicionar as opções para cada dia de jogo retornado do Supabase
     data.forEach(gameDay => {
         // Verifique o que está sendo retornado
-        console.log(`Dia de Jogo: ${gameDay.name}, Data: ${gameDay.date}`);
         const dayName = gameDay.day_name || 'Nome não disponível';  // Agora usando 'day_name'
         const formattedDate = formatDate(gameDay.date); // Formatar a data no formato DD-MM-YYYY
 
@@ -194,6 +193,9 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         return;
     }
 
+    // Verificar a estrutura dos dados retornados
+    console.log('Estrutura completa dos dados retornados do Supabase:', data);
+    
     const gameDayId = gameDayData.id; // ID do dia de jogo
 
     // Inserir os dados do convidado no Supabase
