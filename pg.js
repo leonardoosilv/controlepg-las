@@ -173,8 +173,8 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
     // Buscar o game_day_id com base no nome ou valor de gameDay
     const { data: gameDayData, error: gameDayError } = await supabase
         .from('game_days')
-        .select('*')
-        .eq('CONCAT(day_name TO_CHAR(date, DD/MM/YYYY))', gameDay) // Supondo que você tenha um campo 'name' em 'game_days'
+        .select('id')
+        .eq('date', gameDay) // Supondo que você tenha um campo 'name' em 'game_days'
         .single(); // Pega um único resultado
     
     if (gameDayError) {
