@@ -185,7 +185,6 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
 
     if (gameDayError) {
         showFeedback('Erro ao buscar o dia de jogo no banco de dados.', 'error');
-        console.error(gameDayError);
         return;
     }
 
