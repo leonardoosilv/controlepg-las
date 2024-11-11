@@ -177,9 +177,6 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         .eq('name', gameDay) // Supondo que você tenha um campo 'name' em 'game_days'
         .single(); // Pega um único resultado
     
-    // Verificar a estrutura dos dados retornados
-    console.log('Estrutura completa dos dados retornados do Supabase:', data);
-
     if (gameDayError) {
         showFeedback('Erro ao buscar o dia de jogo no banco de dados.', 'error');
         return;
