@@ -187,9 +187,6 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         showFeedback('Dia de jogo não encontrado.', 'error');
         return;
     }
-
-    // Verificar a estrutura dos dados retornados
-    console.log('Estrutura completa dos dados retornados do Supabase:', data);
     
     const gameDayId = gameDayData.id; // ID do dia de jogo
 
