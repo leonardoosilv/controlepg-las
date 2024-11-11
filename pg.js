@@ -210,7 +210,7 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         console.error(error);
     } else {
         // Se a inserção for bem-sucedida, atualize a tabela no HTML
-        const tableBody = document.querySelector(`#table-${gameDayId} tbody`);
+        const tableBody = document.querySelector(`#table-${gameDay} tbody`);
         if (!tableBody) return;
 
         // Criar uma nova linha na tabela com os dados do convidado
@@ -218,10 +218,10 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         newRow.innerHTML = `
             <td>${guestName}</td>
             <td>R$ ${amountPaidNumber.toFixed(2).replace('.', ',')}</td>
-            <td id="status-${guestName}-${gameDayId}">${status}</td>
+            <td id="status-${guestName}-${gameDay}">${status}</td>
             <td>
-                <button onclick="editarStatus('${guestName}-${gameDayId}', '${status}', '${gameDayId}')">Editar Status</button>
-                <button onclick="excluirConvidado('${guestName}', '${gameDayId}')">
+                <button onclick="editarStatus('${guestName}-${gameDay}', '${status}', '${gameDay}')">Editar Status</button>
+                <button onclick="excluirConvidado('${guestName}', '${gameDay}')">
                     <i class="fas fa-trash-alt"></i> Excluir
                 </button>
             </td>
@@ -229,7 +229,7 @@ document.getElementById('add-guest-form').addEventListener('submit', async funct
         tableBody.appendChild(newRow);
 
         // Atualizar o total de valores pagos
-        atualizarTotal(gameDayId);
+        atualizarTotal(gameDay);
 
         // Exibir mensagem de sucesso e limpar o formulário
         showFeedback('Convidado adicionado com sucesso!', 'success');
