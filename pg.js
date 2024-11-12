@@ -159,7 +159,7 @@ async function carregarPagamentos() {
         const { data: guests, error: guestsError } = await supabase
             .from('guests')  // Nome da tabela de convidados
             .select('*')
-            .eq('game_day_id', gameDay.date);  // Supondo que a data seja a chave de relacionamento
+            .eq('game_day_id', gameDay.id);  // Supondo que a data seja a chave de relacionamento
 
         if (guestsError) {
             console.error('Erro ao carregar convidados:', guestsError);
